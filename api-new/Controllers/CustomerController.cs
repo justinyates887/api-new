@@ -93,8 +93,8 @@ namespace api_new.Controllers
         {
             string query = @"
                             update dbo.Customers
-                            set Fullname= @Fullname
-                            where Fullname= @Fullname
+                            set (Fullname= @Fullname, Username= @Username, MobileNumber= @MobileNumber, Email= @Email, Address= @Address, Password= @Password)
+                            where ClientId= @ClientId
                             ";
 
             DataTable table = new DataTable();
@@ -108,6 +108,43 @@ namespace api_new.Controllers
                 using (SqlCommand myCommand = new SqlCommand(query, myCon))
                 {
                     myCommand.Parameters.AddWithValue("@Fullname", cust.Fullname);
+                    myCommand.Parameters.AddWithValue("@Username", cust.Username);
+                    myCommand.Parameters.AddWithValue("@MobileNumber", cust.MobileNumber);
+                    myCommand.Parameters.AddWithValue("@Email", cust.Email);
+                    myCommand.Parameters.AddWithValue("@Address", cust.Address);
+                    myCommand.Parameters.AddWithValue("@Password", cust.Password);
+                    myReader = myCommand.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myCon.Close();
+                }
+            }
+
+            return new JsonResult("Added!");
+
+        }
+
+        //Doesn;t work.......
+        [HttpDelete("{id}")]
+        public JsonResult Delete(int id)
+        {
+            string query = @"
+                            delete from dbo.Customers
+                            where ClientId= @ClientId
+                            ";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("CustomerDbCon");
+            SqlDataReader myReader;
+            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            {
+                myCon.Open();
+
+                //Fill data into reader
+                using (SqlCommand myCommand = new SqlCommand(query, myCon))
+                {
+                    myCommand.Parameters.AddWithValue("@ClientId", id);
+
                     myReader = myCommand.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
