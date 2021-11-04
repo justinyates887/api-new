@@ -19,8 +19,6 @@ namespace api_new.Models
 
         public bool PaidInFull { get; set; }
 
-        public string InvoiceDue { get; set; }
-
         public string InvoiceFilePath { get; set; }
 
         public string DateDue { get; set; }
